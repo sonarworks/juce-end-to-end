@@ -71,7 +71,7 @@ void Connection::run ()
 {
     preventSigPipeExceptions ();
 
-    log (_logLevel, "Connecting to port: " + juce::String(_port));        
+    log (_logLevel, "Connecting to e2e test server on port: " + juce::String(_port));        
 
     bool connected = false; 
 
@@ -80,9 +80,8 @@ void Connection::run ()
         connected = _socket.connect ("localhost", _port);
         if (! connected)
         {
-            log (_logLevel, "Failed to connect, waiting and retrying");
             using namespace std::chrono_literals;
-            std::this_thread::sleep_for(1000ms);
+            std::this_thread::sleep_for(100ms);
         }
     }
 

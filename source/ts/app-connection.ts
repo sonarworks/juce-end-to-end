@@ -77,14 +77,11 @@ export class AppConnection extends EventEmitter {
     this.connection?.kill();
   }
 
-  async waitForClient() {
-    if (!this.listenPort) {
-      throw new Error(
-        `Listening port must be specific to wait for client`
-      );
-    }
+  async startServer(): Promise<number> {
+    return this.server.listen(this.listenPort);
+  }
 
-    await this.server.listen(this.listenPort);
+  async waitForClient() {
     const socket = await this.server.waitForConnection();
 
     this.connection = new Connection(socket);
@@ -135,17 +132,9 @@ export class AppConnection extends EventEmitter {
   }
 
   async launch(extraArgs: string[] = [], env: EnvironmentVariables = {}) {
-    const port = await this.server.listen(this.listenPort);
+    const port = await this.startServer();
     this.launchProcess(extraArgs.concat([`--e2e-test-port=${port}`]), env);
-    const socket = await this.server.waitForConnection();
-
-    this.connection = new Connection(socket);
-    this.connection.on('connect', () => this.emit('connect'));
-    this.connection.on('disconnect', () => {
-      this.server.close();
-      this.connection = undefined;
-      this.emit('disconnect');
-    });
+    await this.waitForClient();
   }
 
   kill() {
