@@ -414,6 +414,29 @@ export class AppConnection extends EventEmitter {
     );
   }
 
+  async waitForComponentTextToBe(
+    componentName: string,
+    text: string,
+    timeoutInMilliseconds = DEFAULT_TIMEOUT
+  ): Promise<boolean> {
+    try {
+      await waitForResult(
+        () => this.getComponentText(componentName),
+        text,
+        timeoutInMilliseconds
+      );
+
+      return true;
+    } catch (error) {
+      const failString = `Component '${componentName}' text didn't become ${text}`;
+
+      const filename = `${++screenshotIndex}.png`;
+      console.error(`${failString}, writing screenshot to ${filename}`);
+      await this.saveScreenshot('', filename);
+      throw new Error(failString);
+    }
+  }
+
   async countComponents(componentId: string, rootId: string): Promise<number> {
     const result = (await this.sendCommand({
       type: 'get-component-count',
