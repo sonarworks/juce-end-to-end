@@ -47,6 +47,7 @@ public:
         _connection->_onDataReceived = [this] (auto && block) { onDataReceived (block); };
         _connection->start ();
 
+        log (_logLevel, "Component name will be printed to console when mouse is moved over component with Shift key pressed or when component is double-clicked");
         juce::Desktop::getInstance ().addGlobalMouseListener (this);
     }
 
@@ -134,6 +135,14 @@ private:
     void mouseDoubleClick (const juce::MouseEvent &event) override
     {
         log (_logLevel, "Mouse double-click on: " + ComponentSearch::getComponentPath(event.eventComponent));
+    }
+
+    void mouseEnter (const juce::MouseEvent& event) override
+    {
+        if (event.mods.isShiftDown())
+        {
+            log (_logLevel, "Mouse entered: " + ComponentSearch::getComponentPath(event.eventComponent));
+        }
     }
 
     const LogLevel _logLevel;
