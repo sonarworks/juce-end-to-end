@@ -228,6 +228,10 @@ Response getScreenshot (const Command & command)
 
     auto * component = componentId.isEmpty () ? ComponentSearch::findWindowWithId (windowId)
                                               : ComponentSearch::findWithId (componentId);
+    if (!component)
+    {
+        component = ComponentSearch::findRootComponentWithId(componentId);
+    }
 
     if (component == nullptr)
         return Response::fail ("Component not found: " + juce::String (componentId));

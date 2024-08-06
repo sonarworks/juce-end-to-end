@@ -107,6 +107,26 @@ juce::TopLevelWindow * ComponentSearch::findWindowWithId (const juce::String & i
     return it == topWindows.end () ? nullptr : *it;
 }
 
+juce::Component * ComponentSearch::findRootComponentWithId (const juce::String & componentId)
+{
+    if (_rootComponents.empty())
+    {
+        return nullptr;
+    }
+
+    if (componentId.isEmpty ())
+    {
+        return *_rootComponents.begin ();
+    }
+
+    auto it = std::find_if (_rootComponents.begin (),
+                            _rootComponents.end (),
+                            [&] (auto && component) { return componentHasId (*component, componentId); });
+
+    return it == _rootComponents.end () ? nullptr : *it;
+}
+
+
 int ComponentSearch::countChildComponents (const juce::Component & root,
                                            const juce::String & componentId)
 {

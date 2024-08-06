@@ -9,6 +9,7 @@ class ComponentSearch
 public:
     static juce::Component * findWithId (const juce::String & componentId, int skip = 0);
     static juce::TopLevelWindow * findWindowWithId (const juce::String & windowId = {});
+    static juce::Component * findRootComponentWithId (const juce::String & componentId = {});
 
     static int countChildComponents (const juce::Component & parent,
                                      const juce::String & matchingId);
