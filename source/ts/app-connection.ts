@@ -44,6 +44,17 @@ const existsAsFile = (path: string) => {
   }
 };
 
+
+interface Component {
+  id: string;
+  name: string;
+  visible: boolean;
+  enabled: boolean;
+  children: Array<Component>;
+}
+
+export type ComponentTree = Array<Component>;
+
 export class AppConnection extends EventEmitter {
   appPath?: string;
   process?: AppProcess;
@@ -534,7 +545,7 @@ export class AppConnection extends EventEmitter {
     return false;
   }
 
-  async dumpComponentTree(componentId?: string): Promise<Object> {
+  async dumpComponentTree(componentId?: string): Promise<ComponentTree> {
     const componentResponse = (await this.sendCommand({
       type: 'dump-component-tree',
       args: {
@@ -542,7 +553,7 @@ export class AppConnection extends EventEmitter {
       },
     })) as ComponentTreeResponse;
 
-    return componentResponse.components;
+    return componentResponse.components as ComponentTree;
   }
 
 }
