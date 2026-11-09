@@ -2,6 +2,9 @@
 
 #include <juce_events/juce_events.h>
 
+#include <chrono>
+#include <thread>
+
 #if JUCE_MAC
     #include <sys/socket.h>
 #endif
